@@ -1,0 +1,59 @@
+name: Deploy ASP.NET Core Web Application to jobsandenvironments
+on:
+  push:
+    branches:
+    - master
+env:
+  AZURE_WEBAPP_NAME: jobsandenvironments
+  AZURE_WEBAPP_PACKAGE_PATH: ./published
+  AZURE_WEBAPP_PACKAGE_PATH_DOWNLOAD: webapp/published
+  CONFIGURATION: Release
+  DOTNET_CORE_VERSION: 3.1.x
+  PROJECT_PATH: JobsAndEnvironments
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core SDK ${{ env.DOTNET_CORE_VERSION }}
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+      with:
+        name: webapp
+        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+  deploydev:
+    needs: build
+    environment:
+     name: dev
+     url: https://jobsandenvironments-dev.azurewebsites.net/
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v2.0.7
+      with:
+        name:  webapp
+    - name: Deploy to Azure WebApp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.JOBSANDENVIRONMENTS_PUBLISH_PROFILE }}
+        package: ${{ github.workspace }}
+        slot-name: dev
+  deployprod:
+    needs: deploydev
+    environment:
+     name: prod
+     url: https://jobsandenvironments.azurewebsites.net/
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v2.0.7
+      with:
+        name:  webapp
+    - name: Deploy to Azure WebApp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.JOBSANDENVIRONMENTS_PUBLISH_PROFILE }}
+        package: ${{ github.workspace }}
