@@ -53,4 +53,4 @@ jobs:
     - name: Update Kubernetes resources
       if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
       run: |
-        echo "Deploy Prod"
+        echo "Deploy Prod 1"
