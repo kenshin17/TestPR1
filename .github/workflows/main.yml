@@ -38,5 +38,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Update Kubernetes resources
+      if: github.ref != 'refs/heads/develop' && github.event_name != 'pull_request'
       run: |
         echo "Deploy Prod"
