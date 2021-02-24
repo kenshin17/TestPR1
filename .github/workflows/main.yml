@@ -23,7 +23,7 @@ jobs:
     needs: build
     environment:
      name: dev
-     url: https://jobsandenvironments-dev.azurewebsites.net/
+     url: https://dev.example.com
     runs-on: ubuntu-latest
     steps:
     - name: Update Kubernetes resources
@@ -35,7 +35,7 @@ jobs:
     needs: deploydev
     environment:
      name: dev
-     url: https://jobsandenvironments-staging.azurewebsites.net/
+     url: https://staging.example.com
     runs-on: ubuntu-latest
     steps:
     - name: Update Kubernetes resources
@@ -47,7 +47,7 @@ jobs:
     needs: deploystaging
     environment:
      name: prod
-     url: https://jobsandenvironments.azurewebsites.net/
+     url: https://prod.example.com/
     runs-on: ubuntu-latest
     steps:
     - name: Update Kubernetes resources
