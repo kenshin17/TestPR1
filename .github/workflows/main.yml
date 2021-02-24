@@ -27,17 +27,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Update Kubernetes resources
+      if: github.ref == 'refs/heads/develop' && github.event_name != 'pull_request'
       run: |
         echo "Deploy Dev"
 
-  deployprod:
+  deploystaging:
     needs: deploydev
+    environment:
+     name: dev
+     url: https://jobsandenvironments-staging.azurewebsites.net/
+    runs-on: ubuntu-latest
+    steps:
+    - name: Update Kubernetes resources
+      if: github.ref == 'refs/heads/staging' && github.event_name != 'pull_request'
+      run: |
+        echo "Deploy Staging"
+      
+  deployprod:
+    needs: deploystaging
     environment:
      name: prod
      url: https://jobsandenvironments.azurewebsites.net/
     runs-on: ubuntu-latest
     steps:
     - name: Update Kubernetes resources
-      if: github.ref != 'refs/heads/develop' && github.event_name != 'pull_request'
+      if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
       run: |
         echo "Deploy Prod"
