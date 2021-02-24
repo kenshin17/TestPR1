@@ -20,6 +20,7 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
   deploydev:
+    if: github.ref == 'refs/heads/develop' && github.event_name != 'pull_request'
     needs: build
     environment:
      name: dev
@@ -27,11 +28,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Update Kubernetes resources
-      if: github.ref == 'refs/heads/develop' && github.event_name != 'pull_request'
       run: |
         echo "Deploy Dev"
 
   deploystaging:
+    if: github.ref == 'refs/heads/staging' && github.event_name != 'pull_request'
     needs: deploydev
     environment:
      name: dev
@@ -39,11 +40,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Update Kubernetes resources
-      if: github.ref == 'refs/heads/staging' && github.event_name != 'pull_request'
       run: |
         echo "Deploy Staging"
       
   deployprod:
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
     needs: deploystaging
     environment:
      name: prod
@@ -51,6 +52,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Update Kubernetes resources
-      if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
       run: |
         echo "Deploy Prod 1"
