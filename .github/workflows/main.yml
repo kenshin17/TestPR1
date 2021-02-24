@@ -39,4 +39,4 @@ jobs:
     steps:
     - name: Update Kubernetes resources
       run: |
-        echo "Deploy Dev"
+        echo "Deploy Prod"
