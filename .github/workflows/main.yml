@@ -3,7 +3,7 @@ on:
   push:
     branches: [ master, develop, staging ]
   pull_request:
-    branches: [ develop ]
+    branches: [ master, develop, staging ]
     
 env:
   AZURE_WEBAPP_NAME: jobsandenvironments
